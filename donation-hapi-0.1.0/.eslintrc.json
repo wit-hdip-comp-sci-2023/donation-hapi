@@ -19,6 +19,7 @@
     "no-undef": "off",
     "import/no-unresolved": "off",
     "import/no-extraneous-dependencies": "off",
-    "no-console": "off"
+    "no-console": "off",
+    "func-names": "off"
   }
 }
