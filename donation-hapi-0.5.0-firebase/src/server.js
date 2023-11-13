@@ -62,7 +62,7 @@ async function init() {
     verifyOptions: { algorithms: ["HS256"] },
   });
 
-  db.init("mongo");
+  db.init("firebase");
 
   server.route(webRoutes);
   server.route(apiRoutes);

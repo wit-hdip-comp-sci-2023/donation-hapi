@@ -2,6 +2,7 @@ import { userMongoStore } from "./mongo/user-mongo-store.js";
 import { donationMongoStore } from "./mongo/donation-mongo-store.js";
 import { candidateMongoStore } from "./mongo/candidate-mongo-store.js";
 import { connectMongo } from "./mongo/connect.js";
+import { userFirebaseStore } from "./firebase/user-fire-store.js";
 
 export const db = {
   userStore: null,
@@ -15,6 +16,9 @@ export const db = {
         this.donationStore = donationMongoStore;
         this.candidateStore = candidateMongoStore;
         connectMongo();
+        break;
+      case "firebase":
+        this.userStore = userFirebaseStore;
         break;
       default:
     }
