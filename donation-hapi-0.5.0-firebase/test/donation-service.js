@@ -52,4 +52,9 @@ export const donationService = {
     const response = await axios.post(`${this.donationUrl}/api/candidates`, newCandidate);
     return response.data;
   },
+
+  async deleteAllCandidates() {
+    const res = await axios.delete(`${this.donationUrl}/api/candidates`);
+    return res.data;
+  },
 };

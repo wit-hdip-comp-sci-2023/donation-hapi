@@ -22,19 +22,16 @@ export const userFirebaseStore = {
       if (snapshot.exists()) {
         return { _id: id, ...snapshot.val() };
       }
-      return null;
     }
     return null;
   },
 
   async addUser(user) {
-    // Thanks to https://stackoverflow.com/questions/56298481/how-to-fix-object-null-prototype-title-product
-    const fixedUser = JSON.parse(JSON.stringify(user));
     const newUserRef = push(usersRef);
-    await set(newUserRef, fixedUser);
-    const newUserSnapshot = await get(newUserRef);
-    const newUser = newUserSnapshot.val();
-    return { _id: newUserRef.key, ...newUser };
+    await set(newUserRef, user);
+    const newUser = (await get(newUserRef)).val();
+    newUser._id = newUserRef.key;
+    return newUser;
   },
 
   async getUserByEmail(email) {

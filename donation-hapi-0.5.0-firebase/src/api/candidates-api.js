@@ -1,5 +1,5 @@
 import Boom from "@hapi/boom";
-import { Candidate } from "../models/mongo/candidate.js";
+import { db } from "../models/db.js";
 
 export const candidatesApi = {
   find: {
@@ -7,7 +7,7 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const candidates = await Candidate.find();
+      const candidates = await db.candidateStore.find();
       return candidates;
     },
   },
@@ -18,7 +18,7 @@ export const candidatesApi = {
     },
     handler: async function (request, h) {
       try {
-        const candidate = await Candidate.findOne({ _id: request.params.id });
+        const candidate = await db.candidateStore.getCandidateById(request.params.id);
         if (!candidate) {
           return Boom.notFound("No Candidate with this id");
         }
@@ -34,8 +34,7 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const newCandidate = new Candidate(request.payload);
-      const candidate = await newCandidate.save();
+      const candidate = await db.candidateStore.addCandidate(request.payload);
       if (candidate) {
         return h.response(candidate).code(201);
       }
@@ -48,7 +47,7 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      await Candidate.remove({});
+      await db.candidateStore.deleteAll();
       return { success: true };
     },
   },
@@ -58,11 +57,8 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const response = await Candidate.deleteOne({ _id: request.params.id });
-      if (response.deletedCount == 1) {
-        return { success: true };
-      }
-      return Boom.notFound("id not found");
+      await deleteCandidateById(id);
+      return { success: true };
     },
   },
 };
