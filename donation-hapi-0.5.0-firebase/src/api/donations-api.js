@@ -26,7 +26,7 @@ export const donationsApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const candidate = await db.candidateStore.findById(request.params.id);
+      const candidate = await db.candidateStore.getCandidateById(request.params.id);
       if (!candidate) {
         return Boom.notFound("No Candidate with this id");
       }
@@ -40,6 +40,7 @@ export const donationsApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
+      console.log("delete...");
       await db.donationStore.deleteAll();
       return { success: true };
     },

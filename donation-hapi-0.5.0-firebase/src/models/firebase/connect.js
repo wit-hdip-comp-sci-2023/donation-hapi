@@ -10,7 +10,16 @@ const firebaseConfig = {
   projectId: process.env.projectId,
 };
 
-const app = initializeApp(firebaseConfig);
-const database = getDatabase(app);
+let db = null;
 
-export default database;
+export function connectFirebase() {
+  const app = initializeApp(firebaseConfig);
+  db = getDatabase(app);
+}
+
+export function database() {
+  if (!db) {
+    connectFirebase();
+  }
+  return db;
+}

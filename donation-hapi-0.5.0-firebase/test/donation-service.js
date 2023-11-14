@@ -57,4 +57,10 @@ export const donationService = {
     const res = await axios.delete(`${this.donationUrl}/api/candidates`);
     return res.data;
   },
+
+  async deleteAllDonations() {
+    console.log("DELETE");
+    const res = await axios.delete(`${this.donationUrl}/api/donations`);
+    return res.data;
+  },
 };

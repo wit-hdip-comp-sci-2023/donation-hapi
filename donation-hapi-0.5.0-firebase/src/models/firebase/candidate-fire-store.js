@@ -1,7 +1,7 @@
 import { ref, set, push, get, child, update, remove, query, orderByChild, equalTo } from "firebase/database";
-import database from "./connect.js";
+import { database } from "./connect.js";
 
-const candidatesRef = ref(database, "candidates");
+const candidatesRef = ref(database(), "candidates");
 
 export const candidateFirebaseStore = {
   async getAllCandidates() {
