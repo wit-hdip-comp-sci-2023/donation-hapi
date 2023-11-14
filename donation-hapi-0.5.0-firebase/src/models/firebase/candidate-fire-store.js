@@ -34,8 +34,8 @@ export const candidateFirebaseStore = {
     return newCandidate;
   },
 
-  async getCandidateByEmail(email) {
-    const emailQuery = query(candidatesRef, orderByChild("email"), equalTo(email));
+  async findByName(lastName, firstName) {
+    const emailQuery = query(candidatesRef, orderByChild("lastName"), equalTo(lastName));
     const snapshot = await get(emailQuery);
     const result = [];
     snapshot.forEach((childSnapshot) => {
@@ -51,7 +51,7 @@ export const candidateFirebaseStore = {
     await remove(child(candidatesRef, id));
   },
 
-  async deleteAll() {
+  async deleteAllCandidates() {
     await set(candidatesRef, {});
   },
 

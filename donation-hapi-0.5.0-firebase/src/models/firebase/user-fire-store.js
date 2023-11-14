@@ -51,7 +51,7 @@ export const userFirebaseStore = {
     await remove(child(usersRef, id));
   },
 
-  async deleteAll() {
+  async deleteAllUsers() {
     await set(usersRef, {});
   },
 

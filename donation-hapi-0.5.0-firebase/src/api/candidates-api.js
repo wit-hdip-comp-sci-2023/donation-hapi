@@ -47,7 +47,7 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      await db.candidateStore.deleteAll();
+      await db.candidateStore.deleteAllCandidates();
       return { success: true };
     },
   },

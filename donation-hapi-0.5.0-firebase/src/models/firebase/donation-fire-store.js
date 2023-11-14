@@ -10,7 +10,7 @@ export const donationFireStore = {
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
       const childData = childSnapshot.val();
-      candidates.push({ _id: childKey, ...childData });
+      donations.push({ _id: childKey, ...childData });
     });
     return donations;
   },
@@ -31,10 +31,8 @@ export const donationFireStore = {
     const donation = {
       amount,
       method,
-      donor: donor._id,
-      candidate: candidate._id,
-      lat,
-      lng,
+      donor: donor,
+      candidate: candidate,
     };
     const newDonationRef = push(donationsRef);
     await set(newDonationRef, donation);

@@ -15,16 +15,16 @@ suite("Donation API tests", () => {
   });
   teardown(async () => {
     await donationService.deleteAllCandidates();
+    await donationService.deleteAllDonations();
     await donationService.deleteAllUsers();
-    // await donationService.deleteAllDonations();
   });
 
   test("create a donation", async () => {
     const returnedCandidate = await donationService.createCandidate(testCandidates[0]);
     console.log(returnedCandidate);
-    // await donationService.makeDonation(returnedCandidate._id, testDonations[0]);
-    // const returnedDonations = await donationService.getDonations(returnedCandidate._id);
-    // assert.equal(returnedDonations.length, 1);
-    // assertSubset(returnedDonations[0], testDonations[0]);
+    await donationService.makeDonation(returnedCandidate._id, testDonations[0]);
+    const returnedDonations = await donationService.getDonations(returnedCandidate._id);
+    assert.equal(returnedDonations.length, 1);
+    assertSubset(returnedDonations[0], testDonations[0]);
   });
 });
