@@ -7,7 +7,7 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const candidates = await db.candidateStore.find();
+      const candidates = await db.candidateStore.getAllCandidates();
       return candidates;
     },
   },

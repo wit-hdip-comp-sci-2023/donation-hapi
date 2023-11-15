@@ -17,6 +17,8 @@ export const donationFireStore = {
         method: donation.method,
         donor: donation.donor,
         candidate: donation.candidate,
+        lat: donation.lat,
+        lng: donation.lng,
       };
       donations.push({ _id: childKey, ...donationValue });
     });
@@ -32,7 +34,7 @@ export const donationFireStore = {
   },
 
   async getDonationsByCandidate(id) {
-    const emailQuery = query(usersRef, orderByChild("donor"), equalTo(id));
+    const emailQuery = query(donationsRef, orderByChild("donor"), equalTo(id));
     const snapshot = await get(emailQuery);
     const result = [];
     snapshot.forEach((childSnapshot) => {
@@ -47,8 +49,8 @@ export const donationFireStore = {
     const donation = {
       amount,
       method,
-      donor: donor,
-      candidate: candidate,
+      donor: donor._id,
+      candidate: candidate._id,
       lat: lat,
       lng: lng,
     };
