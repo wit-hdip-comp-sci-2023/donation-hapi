@@ -20,6 +20,7 @@
     "import/no-unresolved": "off",
     "import/no-extraneous-dependencies": "off",
     "no-console": "off",
-    "func-names": "off"
+    "func-names": "off",
+    "no-await-in-loop": "off"
   }
 }

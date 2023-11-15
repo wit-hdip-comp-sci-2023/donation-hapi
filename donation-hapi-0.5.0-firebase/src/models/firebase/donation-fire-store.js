@@ -12,24 +12,12 @@ export const donationFireStore = {
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
       const donation = childSnapshot.val();
-      const donationValue = {
-        amount: donation.amount,
-        method: donation.method,
-        donor: donation.donor,
-        candidate: donation.candidate,
-        lat: donation.lat,
-        lng: donation.lng,
-      };
-      donations.push({ _id: childKey, ...donationValue });
+      donations.push({ _id: childKey, ...donation });
     });
-
     for (let i = 0; i < donations.length; i += 1) {
-      // eslint-disable-next-line no-await-in-loop
       donations[i].donor = await userFirebaseStore.getUserById(donations[i].donor);
-      // eslint-disable-next-line no-await-in-loop
       donations[i].candidate = await candidateFirebaseStore.getCandidateById(donations[i].candidate);
     }
-
     return donations;
   },
 
