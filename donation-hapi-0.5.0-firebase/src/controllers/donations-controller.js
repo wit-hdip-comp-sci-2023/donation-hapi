@@ -22,7 +22,7 @@ export const donationsController = {
         const loggedInUser = request.auth.credentials;
         const rawCandidate = request.payload.candidate.split(",");
         const candidate = await db.candidateStore.findByName(rawCandidate[0], rawCandidate[1]);
-        await db.donationStore.donate(request.payload.amount, request.payload.method, loggedInUser._id, candidate._id);
+        await db.donationStore.donate(request.payload.amount, request.payload.method, loggedInUser._id, candidate._id, request.payload.lat, request.payload.lng);
         return h.redirect("/report");
       } catch (err) {
         return h.view("main", { errors: [{ message: err.message }] });

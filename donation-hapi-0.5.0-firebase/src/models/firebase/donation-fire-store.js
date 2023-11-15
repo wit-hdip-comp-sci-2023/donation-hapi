@@ -1,5 +1,7 @@
 import { ref, set, push, get, child, update, remove, query, orderByChild, equalTo } from "firebase/database";
 import { database } from "./connect.js";
+import { userFirebaseStore } from "./user-fire-store.js";
+import { candidateFirebaseStore } from "./candidate-fire-store.js";
 
 const donationsRef = ref(database(), "donations");
 
@@ -9,9 +11,23 @@ export const donationFireStore = {
     const donations = [];
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
-      const childData = childSnapshot.val();
-      donations.push({ _id: childKey, ...childData });
+      const donation = childSnapshot.val();
+      const donationValue = {
+        amount: donation.amount,
+        method: donation.method,
+        donor: donation.donor,
+        candidate: donation.candidate,
+      };
+      donations.push({ _id: childKey, ...donationValue });
     });
+
+    for (let i = 0; i < donations.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
+      donations[i].donor = await userFirebaseStore.getUserById(donations[i].donor);
+      // eslint-disable-next-line no-await-in-loop
+      donations[i].candidate = await candidateFirebaseStore.getCandidateById(donations[i].candidate);
+    }
+
     return donations;
   },
 
@@ -33,6 +49,8 @@ export const donationFireStore = {
       method,
       donor: donor,
       candidate: candidate,
+      lat: lat,
+      lng: lng,
     };
     const newDonationRef = push(donationsRef);
     await set(newDonationRef, donation);
