@@ -22,23 +22,24 @@ export const donationFireStore = {
   },
 
   async getDonationsByCandidate(id) {
-    const emailQuery = query(donationsRef, orderByChild("donor"), equalTo(id));
-    const snapshot = await get(emailQuery);
-    const result = [];
+    const donorQuery = query(donationsRef, orderByChild("candidate"), equalTo(id));
+    const snapshot = await get(donorQuery);
+
+    const donations = [];
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
       const childData = childSnapshot.val();
-      result.push({ _id: childKey, ...childData });
+      donations.push({ _id: childKey, ...childData });
     });
-    return result.length ? result[0] : null;
+    return donations;
   },
 
-  async donate(amount, method, donor, candidate, lat, lng) {
+  async donate(amount, method, donorId, candidateId, lat, lng) {
     const donation = {
       amount,
       method,
-      donor: donor._id,
-      candidate: candidate._id,
+      donor: donorId,
+      candidate: candidateId,
       lat: lat,
       lng: lng,
     };

@@ -31,7 +31,14 @@ export const donationsApi = {
       if (!candidate) {
         return Boom.notFound("No Candidate with this id");
       }
-      const donation = await db.donationStore.donate(request.payload.amount, request.payload.method, request.auth.credentials, candidate, request.payload.lat, request.payload.lng);
+      const donation = await db.donationStore.donate(
+        request.payload.amount,
+        request.payload.method,
+        request.auth.credentials._id,
+        candidate._id,
+        request.payload.lat,
+        request.payload.lng
+      );
       return donation;
     },
   },
