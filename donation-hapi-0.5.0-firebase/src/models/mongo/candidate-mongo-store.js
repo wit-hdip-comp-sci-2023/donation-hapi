@@ -1,17 +1,17 @@
 import { Candidate } from "./candidate.js";
 
 export const candidateMongoStore = {
-  async getAllCandidates() {
+  async find() {
     const candidates = await Candidate.find().lean();
     return candidates;
   },
 
-  async findById(id) {
+  async findOne(id) {
     const candidate = await Candidate.findOne({ _id: id }).lean();
     return candidate;
   },
 
-  async findByName(lastName, firstName) {
+  async findBy(lastName, firstName) {
     const candidate = await Candidate.findOne({
       lastName,
       firstName,

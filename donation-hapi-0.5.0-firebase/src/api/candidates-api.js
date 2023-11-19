@@ -7,7 +7,7 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const candidates = await db.candidateStore.getAllCandidates();
+      const candidates = await db.candidateStore.find();
       return candidates;
     },
   },
@@ -18,7 +18,7 @@ export const candidatesApi = {
     },
     handler: async function (request, h) {
       try {
-        const candidate = await db.candidateStore.getCandidateById(request.params.id);
+        const candidate = await db.candidateStore.findOne(request.params.id);
         if (!candidate) {
           return Boom.notFound("No Candidate with this id");
         }
@@ -34,7 +34,7 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const candidate = await db.candidateStore.addCandidate(request.payload);
+      const candidate = await db.candidateStore.add(request.payload);
       if (candidate) {
         return h.response(candidate).code(201);
       }
@@ -47,7 +47,7 @@ export const candidatesApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      await db.candidateStore.deleteAllCandidates();
+      await db.candidateStore.delete();
       return { success: true };
     },
   },

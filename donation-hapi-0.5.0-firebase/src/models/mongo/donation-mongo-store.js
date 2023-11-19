@@ -12,7 +12,7 @@ export const donationMongoStore = {
   },
 
   async donate(amount, method, donor, candidate, lat, lng) {
-    const newDonation = new Donation({
+    let newDonation = new Donation({
       amount,
       method,
       donor: donor._id,
@@ -21,6 +21,7 @@ export const donationMongoStore = {
       lng,
     });
     await newDonation.save();
+    newDonation = await Donation.findOne({ _id: newDonation._id }).populate("candidate").populate("donor").lean();
     return newDonation;
   },
 

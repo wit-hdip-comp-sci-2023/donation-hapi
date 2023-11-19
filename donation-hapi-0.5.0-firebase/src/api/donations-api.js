@@ -7,7 +7,7 @@ export const donationsApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const donations = await db.donationStore.getAllDonations();
+      const donations = await db.donationStore.find();
       return donations;
     },
   },

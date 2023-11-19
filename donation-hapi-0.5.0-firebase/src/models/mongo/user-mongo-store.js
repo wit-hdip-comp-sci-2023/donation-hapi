@@ -1,12 +1,12 @@
 import { User } from "./user.js";
 
 export const userMongoStore = {
-  async getAllUsers() {
+  async find() {
     const users = await User.find().lean();
     return users;
   },
 
-  async getUserById(id) {
+  async findOne(id) {
     if (id) {
       const user = await User.findOne({ _id: id }).lean();
       return user;
@@ -14,19 +14,19 @@ export const userMongoStore = {
     return null;
   },
 
-  async addUser(user) {
+  async add(user) {
     const newUser = new User(user);
     const userObj = await newUser.save();
     const u = await this.getUserById(userObj._id);
     return u;
   },
 
-  async getUserByEmail(email) {
+  async findBy(email) {
     const user = await User.findOne({ email: email }).lean();
     return user;
   },
 
-  async deleteUserById(id) {
+  async deleteOne(id) {
     try {
       await User.deleteOne({ _id: id });
     } catch (error) {
@@ -34,7 +34,7 @@ export const userMongoStore = {
     }
   },
 
-  async deleteAll() {
+  async delete() {
     await User.deleteMany({});
   },
 };

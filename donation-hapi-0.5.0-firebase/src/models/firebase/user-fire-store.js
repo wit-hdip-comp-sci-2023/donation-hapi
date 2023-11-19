@@ -1,11 +1,14 @@
 import { ref, set, push, get, child, update, remove, query, orderByChild, equalTo } from "firebase/database";
-import { database } from "./connect.js";
-
-const usersRef = ref(database(), "users");
 
 export const userFirebaseStore = {
-  async getAllUsers() {
-    const snapshot = await get(usersRef);
+  ref: null,
+
+  setDatabase(database) {
+    this.ref = ref(database, "users");
+  },
+
+  async find() {
+    const snapshot = await get(this.ref);
     const users = [];
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
@@ -15,9 +18,9 @@ export const userFirebaseStore = {
     return users;
   },
 
-  async getUserById(id) {
+  async findOne(id) {
     if (id) {
-      const userRef = child(usersRef, id);
+      const userRef = child(this.ref, id);
       const snapshot = await get(userRef);
       if (snapshot.exists()) {
         return { _id: id, ...snapshot.val() };
@@ -26,16 +29,16 @@ export const userFirebaseStore = {
     return null;
   },
 
-  async addUser(user) {
-    const newUserRef = push(usersRef);
+  async add(user) {
+    const newUserRef = push(this.ref);
     await set(newUserRef, user);
     const newUser = (await get(newUserRef)).val();
     newUser._id = newUserRef.key;
     return newUser;
   },
 
-  async getUserByEmail(email) {
-    const emailQuery = query(usersRef, orderByChild("email"), equalTo(email));
+  async findByl(email) {
+    const emailQuery = query(this.ref, orderByChild("email"), equalTo(email));
     const snapshot = await get(emailQuery);
     const result = [];
     snapshot.forEach((childSnapshot) => {
@@ -47,24 +50,19 @@ export const userFirebaseStore = {
     return result.length ? result[0] : null;
   },
 
-  async deleteUserById(id) {
-    await remove(child(usersRef, id));
+  async deleteOne(id) {
+    await remove(child(this.ref, id));
   },
 
-  async deleteAllUsers() {
-    await set(usersRef, {});
+  async delete() {
+    await set(this.ref, {});
   },
 
-  async editUser(user) {
-    // Thanks to https://stackoverflow.com/questions/56298481/how-to-fix-object-null-prototype-title-product
+  async edit(user) {
     const fixedUser = JSON.parse(JSON.stringify(user));
     const userId = fixedUser._id;
-    // Don't update the _id.
     delete fixedUser._id;
-
-    // Update the user
-    const userRef = child(usersRef, userId);
-
+    const userRef = child(this.ref, userId);
     await update(userRef, fixedUser);
   },
 };

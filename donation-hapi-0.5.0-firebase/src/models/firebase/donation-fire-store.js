@@ -1,13 +1,16 @@
 import { ref, set, push, get, child, update, remove, query, orderByChild, equalTo } from "firebase/database";
-import { database } from "./connect.js";
 import { userFirebaseStore } from "./user-fire-store.js";
 import { candidateFirebaseStore } from "./candidate-fire-store.js";
 
-const donationsRef = ref(database(), "donations");
-
 export const donationFireStore = {
-  async getAllDonations() {
-    const snapshot = await get(donationsRef);
+  ref: null,
+
+  setDatabase(database) {
+    this.ref = ref(database, "donations");
+  },
+
+  async find() {
+    const snapshot = await get(this.ref);
     const donations = [];
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
@@ -21,8 +24,8 @@ export const donationFireStore = {
     return donations;
   },
 
-  async getDonationsByCandidate(id) {
-    const donorQuery = query(donationsRef, orderByChild("candidate"), equalTo(id));
+  async findBy(id) {
+    const donorQuery = query(this.ref, orderByChild("candidate"), equalTo(id));
     const snapshot = await get(donorQuery);
 
     const donations = [];
@@ -43,14 +46,14 @@ export const donationFireStore = {
       lat: lat,
       lng: lng,
     };
-    const newDonationRef = push(donationsRef);
+    const newDonationRef = push(this.ref);
     await set(newDonationRef, donation);
     const newDonation = (await get(newDonationRef)).val();
     newDonation._id = newDonationRef.key;
     return newDonation;
   },
 
-  async deleteAll() {
-    await set(donationsRef, {});
+  async delete() {
+    await set(this.ref, {});
   },
 };

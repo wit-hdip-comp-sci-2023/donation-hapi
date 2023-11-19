@@ -9,7 +9,7 @@ export const userApi = {
     },
     handler: async function (request, h) {
       try {
-        const users = await db.userStore.getAllUsers();
+        const users = await db.userStore.find();
         return users;
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
@@ -23,7 +23,7 @@ export const userApi = {
     },
     handler: async function (request, h) {
       try {
-        const user = await db.userStore.getUserById(request.params.id);
+        const user = await db.userStore.findOne(request.params.id);
         if (!user) {
           return Boom.notFound("No User with this id");
         }
@@ -38,7 +38,7 @@ export const userApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        const user = await db.userStore.addUser(request.payload);
+        const user = await db.userStore.add(request.payload);
         if (user) {
           return h.response(user).code(201);
         }
@@ -55,7 +55,7 @@ export const userApi = {
     },
     handler: async function (request, h) {
       try {
-        await db.userStore.deleteAll();
+        await db.userStore.delete();
         return h.response().code(204);
       } catch (err) {
         return Boom.serverUnavailable("Database Error");
@@ -67,7 +67,7 @@ export const userApi = {
     auth: false,
     handler: async function (request, h) {
       try {
-        const user = await db.userStore.getUserByEmail(request.payload.email);
+        const user = await db.userStore.findBy(request.payload.email);
         if (!user) {
           return Boom.unauthorized("User not found");
         }

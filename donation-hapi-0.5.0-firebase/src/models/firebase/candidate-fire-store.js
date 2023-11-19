@@ -1,11 +1,14 @@
 import { ref, set, push, get, child, update, remove, query, orderByChild, equalTo } from "firebase/database";
-import { database } from "./connect.js";
-
-const candidatesRef = ref(database(), "candidates");
 
 export const candidateFirebaseStore = {
-  async getAllCandidates() {
-    const snapshot = await get(candidatesRef);
+  ref: null,
+
+  setDatabase(database) {
+    this.ref = ref(database, "candidates");
+  },
+
+  async find() {
+    const snapshot = await get(this.ref);
     const candidates = [];
     snapshot.forEach((childSnapshot) => {
       const childKey = childSnapshot.key;
@@ -15,10 +18,10 @@ export const candidateFirebaseStore = {
     return candidates;
   },
 
-  async getCandidateById(id) {
+  async findOne(id) {
     if (id) {
-      const CandidateRef = child(candidatesRef, id);
-      const snapshot = await get(CandidateRef);
+      const candidateRef = child(this.ref, id);
+      const snapshot = await get(candidateRef);
       if (snapshot.exists()) {
         return { _id: id, ...snapshot.val() };
       }
@@ -26,16 +29,16 @@ export const candidateFirebaseStore = {
     return null;
   },
 
-  async addCandidate(Candidate) {
-    const newCandidateRef = push(candidatesRef);
-    await set(newCandidateRef, Candidate);
+  async add(candidate) {
+    const newCandidateRef = push(this.ref);
+    await set(newCandidateRef, candidate);
     const newCandidate = (await get(newCandidateRef)).val();
     newCandidate._id = newCandidateRef.key;
     return newCandidate;
   },
 
-  async findByName(lastName, firstName) {
-    const emailQuery = query(candidatesRef, orderByChild("lastName"), equalTo(lastName));
+  async findBy(lastName, firstName) {
+    const emailQuery = query(this.ref, orderByChild("lastName"), equalTo(lastName));
     const snapshot = await get(emailQuery);
     const result = [];
     snapshot.forEach((childSnapshot) => {
@@ -47,24 +50,19 @@ export const candidateFirebaseStore = {
     return result.length ? result[0] : null;
   },
 
-  async deleteCandidateById(id) {
-    await remove(child(candidatesRef, id));
+  async deleteOne(id) {
+    await remove(child(this.ref, id));
   },
 
-  async deleteAllCandidates() {
-    await set(candidatesRef, {});
+  async delete() {
+    await set(this.ref, {});
   },
 
-  async editCandidate(Candidate) {
-    // Thanks to https://stackoverflow.com/questions/56298481/how-to-fix-object-null-prototype-title-product
-    const fixedCandidate = JSON.parse(JSON.stringify(Candidate));
-    const CandidateId = fixedCandidate._id;
-    // Don't update the _id.
+  async edit(candidate) {
+    const fixedCandidate = JSON.parse(JSON.stringify(candidate));
+    const candidateId = fixedCandidate._id;
     delete fixedCandidate._id;
-
-    // Update the Candidate
-    const CandidateRef = child(candidatesRef, CandidateId);
-
-    await update(CandidateRef, fixedCandidate);
+    const candidateRef = child(this.ref, candidateId);
+    await update(candidateRef, fixedCandidate);
   },
 };
