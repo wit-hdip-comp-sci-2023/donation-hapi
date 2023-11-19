@@ -1,4 +1,5 @@
 import { ref, set, push, get, child, update, remove, query, orderByChild, equalTo } from "firebase/database";
+import { find, add, findBy } from "./firebase-utils.js";
 import { userFirebaseStore } from "./user-fire-store.js";
 import { candidateFirebaseStore } from "./candidate-fire-store.js";
 
@@ -10,30 +11,16 @@ export const donationFireStore = {
   },
 
   async find() {
-    const snapshot = await get(this.ref);
-    const donations = [];
-    snapshot.forEach((childSnapshot) => {
-      const childKey = childSnapshot.key;
-      const donation = childSnapshot.val();
-      donations.push({ _id: childKey, ...donation });
-    });
+    const donations = await find(this.ref);
     for (let i = 0; i < donations.length; i += 1) {
-      donations[i].donor = await userFirebaseStore.getUserById(donations[i].donor);
-      donations[i].candidate = await candidateFirebaseStore.getCandidateById(donations[i].candidate);
+      donations[i].donor = await userFirebaseStore.findOne(donations[i].donor);
+      donations[i].candidate = await candidateFirebaseStore.findOne(donations[i].candidate);
     }
     return donations;
   },
 
   async findBy(id) {
-    const donorQuery = query(this.ref, orderByChild("candidate"), equalTo(id));
-    const snapshot = await get(donorQuery);
-
-    const donations = [];
-    snapshot.forEach((childSnapshot) => {
-      const childKey = childSnapshot.key;
-      const childData = childSnapshot.val();
-      donations.push({ _id: childKey, ...childData });
-    });
+    const donations = await findBy(this.ref, "candidate", id);
     return donations;
   },
 
@@ -46,10 +33,9 @@ export const donationFireStore = {
       lat: lat,
       lng: lng,
     };
-    const newDonationRef = push(this.ref);
-    await set(newDonationRef, donation);
-    const newDonation = (await get(newDonationRef)).val();
-    newDonation._id = newDonationRef.key;
+    const newDonation = await add(this.ref, donation);
+    newDonation.donor = await userFirebaseStore.findOne(donorId);
+    newDonation.candidate = await candidateFirebaseStore.findOne(candidateId);
     return newDonation;
   },
 

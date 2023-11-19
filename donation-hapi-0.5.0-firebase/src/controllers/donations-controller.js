@@ -3,13 +3,13 @@ import { db } from "../models/db.js";
 export const donationsController = {
   index: {
     handler: async function (request, h) {
-      const candidates = await db.candidateStore.getAllCandidates();
+      const candidates = await db.candidateStore.find();
       return h.view("Donate", { title: "Make a Donation", candidates: candidates });
     },
   },
   report: {
     handler: async function (request, h) {
-      const donations = await db.donationStore.getAllDonations();
+      const donations = await db.donationStore.find();
       return h.view("Report", {
         title: "Donations to Date",
         donations: donations,
@@ -21,7 +21,7 @@ export const donationsController = {
       try {
         const loggedInUser = request.auth.credentials;
         const rawCandidate = request.payload.candidate.split(",");
-        const candidate = await db.candidateStore.findByName(rawCandidate[0], rawCandidate[1]);
+        const candidate = await db.candidateStore.findBy(rawCandidate[0], rawCandidate[1]);
         await db.donationStore.donate(request.payload.amount, request.payload.method, loggedInUser._id, candidate._id, request.payload.lat, request.payload.lng);
         return h.redirect("/report");
       } catch (err) {

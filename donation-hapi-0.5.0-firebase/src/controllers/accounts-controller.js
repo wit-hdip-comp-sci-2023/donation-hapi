@@ -17,7 +17,7 @@ export const accountsController = {
     auth: false,
     handler: async function (request, h) {
       const user = request.payload;
-      await db.userStore.addUser(user);
+      await db.userStore.add(user);
       return h.redirect("/");
     },
   },
@@ -31,7 +31,7 @@ export const accountsController = {
     auth: false,
     handler: async function (request, h) {
       const { email, password } = request.payload;
-      const user = await db.userStore.getUserByEmail(email);
+      const user = await db.userStore.findBy(email);
       if (!user || user.password !== password) {
         return h.redirect("/");
       }
@@ -47,7 +47,7 @@ export const accountsController = {
   },
 
   async validate(request, session) {
-    const user = await db.userStore.getUserById(session.id);
+    const user = await db.userStore.findOne(session.id);
     if (!user) {
       return { isValid: false };
     }

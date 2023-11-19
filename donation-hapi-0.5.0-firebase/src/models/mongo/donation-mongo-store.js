@@ -1,12 +1,12 @@
 import { Donation } from "./donation.js";
 
 export const donationMongoStore = {
-  async getAllDonations() {
+  async find() {
     const donations = await Donation.find().populate("donor").populate("candidate").lean();
     return donations;
   },
 
-  async getDonationsByCandidate(id) {
+  async findBy(id) {
     const donations = await Donation.find({ candidate: id });
     return donations;
   },
@@ -25,7 +25,7 @@ export const donationMongoStore = {
     return newDonation;
   },
 
-  async deleteAll() {
+  async delete() {
     await Donation.deleteMany({});
   },
 };

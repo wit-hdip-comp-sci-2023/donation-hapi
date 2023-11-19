@@ -1,4 +1,5 @@
 import { ref, set, push, get, child, update, remove, query, orderByChild, equalTo } from "firebase/database";
+import { find, findOne, add, findBy, edit } from "./firebase-utils.js";
 
 export const userFirebaseStore = {
   ref: null,
@@ -8,46 +9,23 @@ export const userFirebaseStore = {
   },
 
   async find() {
-    const snapshot = await get(this.ref);
-    const users = [];
-    snapshot.forEach((childSnapshot) => {
-      const childKey = childSnapshot.key;
-      const childData = childSnapshot.val();
-      users.push({ _id: childKey, ...childData });
-    });
+    const users = await find(this.ref, id);
     return users;
   },
 
   async findOne(id) {
-    if (id) {
-      const userRef = child(this.ref, id);
-      const snapshot = await get(userRef);
-      if (snapshot.exists()) {
-        return { _id: id, ...snapshot.val() };
-      }
-    }
-    return null;
+    const user = await findOne(this.ref, id);
+    return user;
   },
 
-  async add(user) {
-    const newUserRef = push(this.ref);
-    await set(newUserRef, user);
-    const newUser = (await get(newUserRef)).val();
-    newUser._id = newUserRef.key;
-    return newUser;
+  async add(obj) {
+    const user = await add(this.ref, obj);
+    return user;
   },
 
-  async findByl(email) {
-    const emailQuery = query(this.ref, orderByChild("email"), equalTo(email));
-    const snapshot = await get(emailQuery);
-    const result = [];
-    snapshot.forEach((childSnapshot) => {
-      const childKey = childSnapshot.key;
-      const childData = childSnapshot.val();
-      result.push({ _id: childKey, ...childData });
-    });
-    // Check if the result array has any elements, if so - return result[0], otherwise return null
-    return result.length ? result[0] : null;
+  async findBy(email) {
+    const users = await findBy(this.ref, "email", email);
+    return users.length ? users[0] : null;
   },
 
   async deleteOne(id) {
@@ -59,10 +37,6 @@ export const userFirebaseStore = {
   },
 
   async edit(user) {
-    const fixedUser = JSON.parse(JSON.stringify(user));
-    const userId = fixedUser._id;
-    delete fixedUser._id;
-    const userRef = child(this.ref, userId);
-    await update(userRef, fixedUser);
+    await edit(this.ref, user);
   },
 };

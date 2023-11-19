@@ -16,7 +16,7 @@ export const donationsApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      const donations = await db.donationStore.getDonationsByCandidate(request.params.id);
+      const donations = await db.donationStore.findBy(request.params.id);
       return donations;
     },
   },
@@ -27,7 +27,7 @@ export const donationsApi = {
     },
     handler: async function (request, h) {
       console.log("Making a donation");
-      const candidate = await db.candidateStore.getCandidateById(request.params.id);
+      const candidate = await db.candidateStore.findOne(request.params.id);
       if (!candidate) {
         return Boom.notFound("No Candidate with this id");
       }

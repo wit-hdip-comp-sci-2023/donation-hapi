@@ -29,7 +29,7 @@ export function decodeToken(token) {
 }
 
 export async function validate(decoded, request) {
-  const user = await db.userStore.getUserById(decoded.id);
+  const user = await db.userStore.findOne(decoded.id);
   if (!user) {
     return { isValid: false };
   }
