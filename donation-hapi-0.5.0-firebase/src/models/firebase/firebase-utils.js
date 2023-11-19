@@ -1,4 +1,4 @@
-import { ref, set, push, get, child, update, remove, query, orderByChild, equalTo } from "firebase/database";
+import { set, push, get, child, update, query, orderByChild, equalTo } from "firebase/database";
 
 export async function find(dbRef) {
   const snapshot = await get(dbRef);
