@@ -1,9 +1,9 @@
 import { ref, set } from "firebase/database";
 import { find, add, findBy } from "./firebase-utils.js";
-import { userFirebaseStore } from "./user-fire-store.js";
-import { candidateFirebaseStore } from "./candidate-fire-store.js";
+import { userStore } from "./user-store.js";
+import { candidateStore } from "./candidate-store.js";
 
-export const donationFireStore = {
+export const donationStore = {
   ref: null,
 
   setDatabase(database) {
@@ -13,8 +13,8 @@ export const donationFireStore = {
   async find() {
     const donations = await find(this.ref);
     for (let i = 0; i < donations.length; i += 1) {
-      donations[i].donor = await userFirebaseStore.findOne(donations[i].donor);
-      donations[i].candidate = await candidateFirebaseStore.findOne(donations[i].candidate);
+      donations[i].donor = await userStore.findOne(donations[i].donor);
+      donations[i].candidate = await candidateStore.findOne(donations[i].candidate);
     }
     return donations;
   },
@@ -34,8 +34,8 @@ export const donationFireStore = {
       lng: lng,
     };
     const newDonation = await add(this.ref, donation);
-    newDonation.donor = await userFirebaseStore.findOne(donorId);
-    newDonation.candidate = await candidateFirebaseStore.findOne(candidateId);
+    newDonation.donor = await userStore.findOne(donorId);
+    newDonation.candidate = await candidateStore.findOne(candidateId);
     return newDonation;
   },
 

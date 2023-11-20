@@ -1,6 +1,6 @@
 import { Candidate } from "./candidate.js";
 
-export const candidateMongoStore = {
+export const candidateStore = {
   async find() {
     const candidates = await Candidate.find().lean();
     return candidates;

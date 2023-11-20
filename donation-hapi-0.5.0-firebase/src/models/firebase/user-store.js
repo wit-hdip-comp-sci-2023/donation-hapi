@@ -1,7 +1,7 @@
 import { ref, set, child, remove } from "firebase/database";
 import { find, findOne, add, findBy, edit } from "./firebase-utils.js";
 
-export const userFirebaseStore = {
+export const userStore = {
   ref: null,
 
   setDatabase(database) {

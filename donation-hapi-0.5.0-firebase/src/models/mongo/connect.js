@@ -1,9 +1,9 @@
 import * as dotenv from "dotenv";
 import Mongoose from "mongoose";
 import * as mongooseSeeder from "mais-mongoose-seeder";
-import { userMongoStore } from "./user-mongo-store.js";
-import { donationMongoStore } from "./donation-mongo-store.js";
-import { candidateMongoStore } from "./candidate-mongo-store.js";
+import { userStore } from "./user-store.js";
+import { donationStore } from "./donation-store.js";
+import { candidateStore } from "./candidate-store.js";
 import { seedData } from "./seed-data.js";
 
 const seedLib = mongooseSeeder.default;
@@ -21,9 +21,9 @@ export function connectMongo(db) {
   Mongoose.connect(process.env.db);
   const mongoDb = Mongoose.connection;
 
-  db.userStore = userMongoStore;
-  db.donationStore = donationMongoStore;
-  db.candidateStore = candidateMongoStore;
+  db.userStore = userStore;
+  db.donationStore = donationStore;
+  db.candidateStore = candidateStore;
 
   mongoDb.on("error", (err) => {
     console.log(`database connection error: ${err}`);

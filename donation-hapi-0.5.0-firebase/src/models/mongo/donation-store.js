@@ -1,6 +1,6 @@
 import { Donation } from "./donation.js";
 
-export const donationMongoStore = {
+export const donationStore = {
   async find() {
     const donations = await Donation.find().populate("donor").populate("candidate").lean();
     return donations;

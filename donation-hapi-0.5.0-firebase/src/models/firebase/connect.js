@@ -1,9 +1,9 @@
-import { initializeApp } from "firebase/app";
+import { initializeApp, getApps } from "firebase/app";
 import * as dotenv from "dotenv";
 import { getDatabase } from "firebase/database";
-import { userFirebaseStore } from "./user-fire-store.js";
-import { candidateFirebaseStore } from "./candidate-fire-store.js";
-import { donationFireStore } from "./donation-fire-store.js";
+import { userStore } from "./user-store.js";
+import { candidateStore } from "./candidate-store.js";
+import { donationStore } from "./donation-store.js";
 
 dotenv.config();
 
@@ -14,11 +14,14 @@ const firebaseConfig = {
 };
 
 export function connectFirebase(db) {
-  const app = initializeApp(firebaseConfig);
-  const database = getDatabase(app);
-  db.userStore = userFirebaseStore;
-  db.candidateStore = candidateFirebaseStore;
-  db.donationStore = donationFireStore;
+  let firebaseApp;
+  if (!getApps().length) {
+    firebaseApp = initializeApp(firebaseConfig);
+  }
+  const database = getDatabase(firebaseApp);
+  db.userStore = userStore;
+  db.candidateStore = candidateStore;
+  db.donationStore = donationStore;
   db.userStore.setDatabase(database);
   db.candidateStore.setDatabase(database);
   db.donationStore.setDatabase(database);

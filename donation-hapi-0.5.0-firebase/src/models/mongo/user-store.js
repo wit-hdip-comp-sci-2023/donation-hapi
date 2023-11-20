@@ -1,6 +1,6 @@
 import { User } from "./user.js";
 
-export const userMongoStore = {
+export const userStore = {
   async find() {
     const users = await User.find().lean();
     return users;
