@@ -9,7 +9,7 @@ export const userStore = {
   },
 
   async find() {
-    const users = await find(this.ref, id);
+    const users = await find(this.ref);
     return users;
   },
 
