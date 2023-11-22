@@ -13,7 +13,7 @@ export const donationStore = {
   async find() {
     const donations = await find(this.ref);
     for (let i = 0; i < donations.length; i += 1) {
-      donations[i].donor = await userStore.findOne(donations[i].donor);
+      // donations[i].donor = await userStore.findOne(donations[i].donor);
       donations[i].candidate = await candidateStore.findOne(donations[i].candidate);
     }
     return donations;
@@ -24,18 +24,9 @@ export const donationStore = {
     return donations;
   },
 
-  async donate(amount, method, donorId, candidateId, lat, lng) {
-    const donation = {
-      amount,
-      method,
-      donor: donorId,
-      candidate: candidateId,
-      lat: lat,
-      lng: lng,
-    };
+  async add(donation) {
     const newDonation = await add(this.ref, donation);
-    newDonation.donor = await userStore.findOne(donorId);
-    newDonation.candidate = await candidateStore.findOne(candidateId);
+    newDonation.candidate = await candidateStore.findOne(donation.candidate);
     return newDonation;
   },
 

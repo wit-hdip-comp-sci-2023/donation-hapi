@@ -48,7 +48,7 @@ export const seedData = {
       method: "direct",
       lat: "52.149220",
       lng: "-6.994620",
-      donor: "->users.marge",
+      donor: "marge@simpson.com",
       candidate: "->candidates.lisa",
     },
     three: {
@@ -56,7 +56,7 @@ export const seedData = {
       method: "paypal",
       lat: "52.161290",
       lng: "-7.231540",
-      donor: "->users.homer",
+      donor: "homer@simpson.com",
       candidate: "->candidates.donald",
     },
   },

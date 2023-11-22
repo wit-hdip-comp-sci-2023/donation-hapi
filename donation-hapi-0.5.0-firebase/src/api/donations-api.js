@@ -26,20 +26,20 @@ export const donationsApi = {
       strategy: "jwt",
     },
     handler: async function (request, h) {
-      console.log("Making a donation");
       const candidate = await db.candidateStore.findOne(request.params.id);
       if (!candidate) {
         return Boom.notFound("No Candidate with this id");
       }
-      const donation = await db.donationStore.donate(
-        request.payload.amount,
-        request.payload.method,
-        request.auth.credentials._id,
-        candidate._id,
-        request.payload.lat,
-        request.payload.lng
-      );
-      return donation;
+      const donation = {
+        amount: request.payload.amount,
+        method: request.payload.method,
+        donor: request.auth.credentials.email,
+        candidate: candidate._id,
+        lat: request.payload.lat,
+        lng: request.payload.lng,
+      };
+      const newDonation = await db.donationStore.add(donation);
+      return newDonation;
     },
   },
 

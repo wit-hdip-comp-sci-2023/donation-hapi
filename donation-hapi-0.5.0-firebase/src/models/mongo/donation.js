@@ -7,10 +7,7 @@ const donationSchema = new Schema({
   method: String,
   lat: String,
   lng: String,
-  donor: {
-    type: Schema.Types.ObjectId,
-    ref: "User",
-  },
+  donor: String,
   candidate: {
     type: Schema.Types.ObjectId,
     ref: "Candidate",
