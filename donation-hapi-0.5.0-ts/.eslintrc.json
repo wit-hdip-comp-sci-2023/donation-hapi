@@ -1,0 +1,35 @@
+{
+  "root": true,
+  "env": {
+    "node": true,
+    "es2022": true
+  },
+  "extends": ["airbnb-base", "prettier", "eslint:recommended", "plugin:@typescript-eslint/recommended"],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": { "project": ["./tsconfig.json"] },
+  "plugins": ["@typescript-eslint"],
+  "rules": {
+    "@typescript-eslint/strict-boolean-expressions": [
+      2,
+      {
+        "allowString": false,
+        "allowNumber": false
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/ban-ts-comment": "off",
+    "quotes": ["error", "double"],
+    "prefer-arrow-callback": "off",
+    "import/extensions": "off",
+    "import/prefer-default-export": "off",
+    "import/named": "off",
+    "import/no-unresolved": "off",
+    "object-shorthand": "off",
+    "no-underscore-dangle": "off",
+    "no-param-reassign": "off",
+    "no-undef": "off",
+    "func-names": "off",
+    "no-console": "off"
+  },
+  "ignorePatterns": ["**/*.js", "test/**/*.ts"]
+}
