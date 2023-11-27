@@ -1,6 +1,6 @@
 import { Request, ResponseObject, ResponseToolkit } from "@hapi/hapi";
 import { db } from "../models/db.js";
-import { User } from "../types/donation-stores.js";
+import { User } from "../types/donation-types.js";
 
 export const accountsController = {
   index: {

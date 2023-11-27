@@ -1,33 +1,12 @@
-import { initializeApp, getApps } from "firebase/app";
+import { initializeApp } from "firebase/app";
 import * as dotenv from "dotenv";
-import { Database, getDatabase } from "firebase/database";
+import { getDatabase, ref } from "firebase/database";
 import { userStore } from "./user-store.js";
 import { candidateStore } from "./candidate-store.js";
 import { donationStore } from "./donation-store.js";
 import { Db } from "../../types/donation-stores.js";
 
-// dotenv.config();
-
-// const firebaseConfig = {
-//   apiKey: process.env.apiKey,
-//   databaseURL: process.env.databaseURL,
-//   projectId: process.env.projectId,
-// };
-
-// const firebaseApp = initializeApp(firebaseConfig);
-// export const firebaseDatabase = getDatabase(firebaseApp);
-
-export function connectFirebase(db: Db) {
-  // let firebaseApp;
-  // if (!getApps().length) {
-  //   firebaseApp = initializeApp(firebaseConfig);
-  // }
-  db.userStore = userStore;
-  db.candidateStore = candidateStore;
-  db.donationStore = donationStore;
-}
-
-export function getDb(): Database {
+export function connectFirebase(): Db {
   dotenv.config();
   const firebaseConfig = {
     apiKey: process.env.apiKey,
@@ -35,5 +14,18 @@ export function getDb(): Database {
     projectId: process.env.projectId,
   };
   const firebaseApp = initializeApp(firebaseConfig);
-  return getDatabase(firebaseApp);
+  const database = getDatabase(firebaseApp);
+  candidateStore.doc = ref(database, "candidates");
+  userStore.doc = ref(database, "users");
+  donationStore.doc = ref(database, "donations");
+  const db: Db = {
+    userStore: userStore,
+    candidateStore: candidateStore,
+    donationStore: donationStore,
+  };
+  return db;
+}
+
+export function demo() {
+  console.log("test");
 }

@@ -1,19 +1,11 @@
-import { userStore } from "./firebase/user-store.js";
-import { candidateStore } from "./firebase/candidate-store.js";
-import { donationStore } from "./firebase/donation-store.js";
-export const db = {
-    userStore: userStore,
-    candidateStore: candidateStore,
-    donationStore: donationStore,
-    init(dbType) {
-        // switch (dbType) {
-        //   case "mongo":
-        //     connectMongo(this);
-        //     break;
-        //   case "firebase":
-        //     connectFirebase(this);
-        //     break;
-        //   default:
-        // }
-    },
-};
+import { connectFirebase } from "./firebase/connect.js";
+// eslint-disable-next-line import/no-mutable-exports
+export let db;
+export function connectDb(dbType) {
+    switch (dbType) {
+        case "firebase":
+            db = connectFirebase();
+            break;
+        default:
+    }
+}

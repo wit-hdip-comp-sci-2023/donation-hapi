@@ -1,6 +1,6 @@
 import { Request, ResponseObject, ResponseToolkit } from "@hapi/hapi";
 import { db } from "../models/db.js";
-import { Candidate, Donation, User } from "../types/donation-stores.js";
+import { Donation, User } from "../types/donation-types.js";
 
 export const donationsController = {
   index: {
@@ -23,15 +23,12 @@ export const donationsController = {
       try {
         const loggedInUser = request.auth.credentials as User;
         const donationPayload = request.payload as Donation;
-        const rawCandidate = donationPayload.candidate as string;
-        const candidateName = rawCandidate.split(",");
-        const candidate = (await db.candidateStore.findBy(candidateName[1])) as Candidate;
-
+        const candidateId = donationPayload.candidate as string;
         const donation = {
           amount: donationPayload.amount,
           method: donationPayload.method,
           donor: loggedInUser.email,
-          candidate: candidate._id,
+          candidate: candidateId,
           lat: donationPayload.lat,
           lng: donationPayload.lng,
         };

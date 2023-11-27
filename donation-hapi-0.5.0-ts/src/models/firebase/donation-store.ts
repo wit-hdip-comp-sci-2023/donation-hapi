@@ -1,15 +1,17 @@
-import { ref, set, remove, child } from "firebase/database";
+import { set, remove, child, DatabaseReference } from "firebase/database";
 import { find, add, findBy, findOne, edit } from "./firebase-utils.js";
-import { getDb } from "./connect.js";
+
 import { candidateStore } from "./candidate-store.js";
-import type { Candidate, Donation, Store } from "../../types/donation-stores";
+import type { Store } from "../../types/donation-stores";
+import { Candidate, Donation } from "../../types/donation-types.js";
 
 export const donationStore: Store = {
-  doc: ref(getDb(), "donations"),
+  doc: <DatabaseReference>{},
 
   async find(): Promise<Donation[]> {
     const donations = (await find(this.doc)) as Donation[];
     for (let i = 0; i < donations.length; i += 1) {
+      // eslint-disable-next-line no-await-in-loop
       donations[i].candidate = (await candidateStore.findOne(donations[i].candidate as string)) as Candidate;
     }
     return donations;

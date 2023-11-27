@@ -1,10 +1,10 @@
-import { ref, set, child, remove } from "firebase/database";
+import { set, child, remove, DatabaseReference } from "firebase/database";
 import { find, findOne, add, findBy, edit } from "./firebase-utils.js";
-import { getDb } from "./connect.js";
-import type { Store, User } from "../../types/donation-stores.js";
+import type { Store } from "../../types/donation-stores.js";
+import { User } from "../../types/donation-types.js";
 
 export const userStore: Store = {
-  doc: ref(getDb(), "users"),
+  doc: <DatabaseReference>{},
 
   async find(): Promise<User[]> {
     const users = (await find(this.doc)) as User[];
@@ -23,7 +23,7 @@ export const userStore: Store = {
 
   async findBy(email: string): Promise<User | null> {
     const users = (await findBy(this.doc, "email", email)) as User[];
-    return users.length ? users[0] : null;
+    return users.length > 0 ? users[0] : null;
   },
 
   async deleteOne(id: string): Promise<void> {

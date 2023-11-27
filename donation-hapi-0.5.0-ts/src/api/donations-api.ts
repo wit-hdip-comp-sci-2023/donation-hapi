@@ -1,7 +1,7 @@
 import Boom from "@hapi/boom";
 import { Request, ResponseObject, ResponseToolkit } from "@hapi/hapi";
 import { db } from "../models/db.js";
-import { Candidate, Donation } from "../types/donation-stores.js";
+import { Candidate, Donation } from "../types/donation-types.js";
 
 export const donationsApi = {
   findAll: {

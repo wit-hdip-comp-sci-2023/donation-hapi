@@ -1,8 +1,8 @@
-import jwt from "jsonwebtoken";
+import jwt, { JwtPayload } from "jsonwebtoken";
 import { Request } from "@hapi/hapi";
 import dotenv from "dotenv";
 import { db } from "../models/db.js";
-import { User, JwtPayload } from "../types/donation-stores";
+import { User } from "../types/donation-types.js";
 
 dotenv.config();
 const cookiePassword = process.env.COOKIE_PASSWORD as string;

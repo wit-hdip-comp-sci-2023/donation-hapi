@@ -20,14 +20,12 @@ export const donationsController = {
             try {
                 const loggedInUser = request.auth.credentials;
                 const donationPayload = request.payload;
-                const rawCandidate = donationPayload.candidate;
-                const candidateName = rawCandidate.split(",");
-                const candidate = (await db.candidateStore.findBy(candidateName[1]));
+                const candidateId = donationPayload.candidate;
                 const donation = {
                     amount: donationPayload.amount,
                     method: donationPayload.method,
                     donor: loggedInUser.email,
-                    candidate: candidate._id,
+                    candidate: candidateId,
                     lat: donationPayload.lat,
                     lng: donationPayload.lng,
                 };

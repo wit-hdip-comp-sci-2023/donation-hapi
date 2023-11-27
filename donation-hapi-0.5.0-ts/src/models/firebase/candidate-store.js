@@ -1,8 +1,7 @@
-import { ref, set, child, remove } from "firebase/database";
+import { set, child, remove } from "firebase/database";
 import { find, findOne, edit, add, findBy } from "./firebase-utils.js";
-import { getDb } from "./connect.js";
 export const candidateStore = {
-    doc: ref(getDb(), "candidates"),
+    doc: {},
     async find() {
         const candidates = (await find(this.doc));
         return candidates;

@@ -1,12 +1,12 @@
-import { ref, set, remove, child } from "firebase/database";
+import { set, remove, child } from "firebase/database";
 import { find, add, findBy, findOne, edit } from "./firebase-utils.js";
-import { getDb } from "./connect.js";
 import { candidateStore } from "./candidate-store.js";
 export const donationStore = {
-    doc: ref(getDb(), "donations"),
+    doc: {},
     async find() {
         const donations = (await find(this.doc));
         for (let i = 0; i < donations.length; i += 1) {
+            // eslint-disable-next-line no-await-in-loop
             donations[i].candidate = (await candidateStore.findOne(donations[i].candidate));
         }
         return donations;

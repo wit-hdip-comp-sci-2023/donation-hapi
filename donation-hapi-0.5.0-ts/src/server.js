@@ -8,7 +8,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import jwt from "hapi-auth-jwt2";
 import { webRoutes } from "./web-routes.js";
-import { db } from "./models/db.js";
+import { connectDb } from "./models/db.js";
 import { validate } from "./api/jwt-utils.js";
 import { apiRoutes } from "./api-routes.js";
 import { accountsController } from "./controllers/accounts-controller.js";
@@ -54,7 +54,7 @@ async function init() {
         validate: validate,
         verifyOptions: { algorithms: ["HS256"] },
     });
-    db.init("firebase");
+    connectDb("firebase");
     server.route(webRoutes);
     server.route(apiRoutes);
     await server.start();
