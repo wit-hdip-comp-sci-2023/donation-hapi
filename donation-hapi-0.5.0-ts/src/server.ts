@@ -8,11 +8,12 @@ import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import jwt from "hapi-auth-jwt2";
-import { accountsController } from "./controllers/accounts-controller";
-import { webRoutes } from "./web-routes";
-import { db } from "./models/db";
+
+import { webRoutes } from "./web-routes.js";
+import { db } from "./models/db.js";
 import { validate } from "./api/jwt-utils.js";
-import { apiRoutes } from "./api-routes";
+import { apiRoutes } from "./api-routes.js";
+import { accountsController } from "./controllers/accounts-controller.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -24,6 +25,7 @@ if (result.error) {
 
 async function init() {
   const server = Hapi.server({
+    // eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
     port: process.env.PORT || 4000,
     routes: { cors: true },
   });

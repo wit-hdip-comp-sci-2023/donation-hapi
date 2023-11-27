@@ -1,6 +1,6 @@
-import { userApi } from "./api/users-api";
-import { donationsApi } from "./api/donations-api";
-import { candidatesApi } from "./api/candidates-api";
+import { userApi } from "./api/users-api.js";
+import { donationsApi } from "./api/donations-api.js";
+import { candidatesApi } from "./api/candidates-api.js";
 
 export const apiRoutes = [
   { method: "GET", path: "/api/users", config: userApi.find },

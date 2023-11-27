@@ -23,8 +23,9 @@ export const donationsController = {
       try {
         const loggedInUser = request.auth.credentials as User;
         const donationPayload = request.payload as Donation;
-        const rawCandidate = donationPayload.candidate.split(",");
-        const candidate = (await db.candidateStore.findBy(rawCandidate[1])) as Candidate;
+        const rawCandidate = donationPayload.candidate as string;
+        const candidateName = rawCandidate.split(",");
+        const candidate = (await db.candidateStore.findBy(candidateName[1])) as Candidate;
 
         const donation = {
           amount: donationPayload.amount,
@@ -37,7 +38,7 @@ export const donationsController = {
         await db.donationStore.add(donation);
 
         return h.redirect("/report");
-      } catch (err) {
+      } catch (err: any) {
         return h.view("main", { errors: [{ message: err.message }] });
       }
     },

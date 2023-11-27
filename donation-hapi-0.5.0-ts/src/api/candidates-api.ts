@@ -7,9 +7,9 @@ export const candidatesApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject> {
+    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
       const candidates = await db.candidateStore.find();
-      return candidates;
+      return h.response(candidates).code(200);
     },
   },
 
@@ -17,13 +17,13 @@ export const candidatesApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function (request, h) {
+    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
       try {
         const candidate = await db.candidateStore.findOne(request.params.id);
-        if (!candidate) {
+        if (candidate === null) {
           return Boom.notFound("No Candidate with this id");
         }
-        return candidate;
+        return h.response(candidate).code(200);
       } catch (err) {
         return Boom.notFound("No Candidate with this id");
       }
@@ -34,9 +34,9 @@ export const candidatesApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function (request, h) {
+    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
       const candidate = await db.candidateStore.add(request.payload);
-      if (candidate) {
+      if (candidate !== null) {
         return h.response(candidate).code(201);
       }
       return Boom.badImplementation("error creating candidate");
@@ -47,9 +47,9 @@ export const candidatesApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function (request, h) {
+    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
       await db.candidateStore.delete();
-      return { success: true };
+      return h.response().code(204);
     },
   },
 
@@ -57,9 +57,9 @@ export const candidatesApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function (request, h) {
-      await deleteCandidateById(id);
-      return { success: true };
+    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
+      await db.candidateStore.deleteOne(request.params.id);
+      return h.response().code(204);
     },
   },
 };

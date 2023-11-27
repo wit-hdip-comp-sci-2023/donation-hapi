@@ -20,7 +20,7 @@ export function createToken(user: User) {
   return jwt.sign(payload, cookiePassword, options);
 }
 
-export function decodeToken(token: string): JwtPayload {
+export function decodeToken(token: string): JwtPayload | null {
   try {
     const decoded = jwt.verify(token, cookiePassword) as jwt.JwtPayload;
     return {
@@ -47,7 +47,7 @@ export function getUserIdFromRequest(request: Request) {
   try {
     const { authorization } = request.headers;
     const token = authorization.split(" ")[1];
-    const decodedToken = jwt.verify(token, "secretpasswordnotrevealedtoanyone");
+    const decodedToken = jwt.verify(token, "secretpasswordnotrevealedtoanyone") as jwt.JwtPayload;
     userId = decodedToken.id;
   } catch (e) {
     userId = null;

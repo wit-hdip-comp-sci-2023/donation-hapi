@@ -1,6 +1,6 @@
-import { userStore } from "./firebase/user-store";
-import { candidateStore } from "./firebase/candidate-store";
-import { donationStore } from "./firebase/donation-store";
+import { userStore } from "./firebase/user-store.js";
+import { candidateStore } from "./firebase/candidate-store.js";
+import { donationStore } from "./firebase/donation-store.js";
 export const db = {
     userStore: userStore,
     candidateStore: candidateStore,

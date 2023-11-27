@@ -1,8 +1,8 @@
 import { ref, set, child, remove } from "firebase/database";
 import { find, findOne, edit, add, findBy } from "./firebase-utils.js";
-import { firebaseDatabase } from "./connect.js";
+import { getDb } from "./connect.js";
 export const candidateStore = {
-    doc: ref(firebaseDatabase, "candidates"),
+    doc: ref(getDb(), "candidates"),
     async find() {
         const candidates = (await find(this.doc));
         return candidates;
@@ -17,7 +17,7 @@ export const candidateStore = {
     },
     async findBy(email) {
         const candidates = (await findBy(this.doc, "lastName", email));
-        return candidates.length ? candidates[0] : null;
+        return candidates.length > 0 ? candidates[0] : null;
     },
     async deleteOne(id) {
         await remove(child(this.doc, id));

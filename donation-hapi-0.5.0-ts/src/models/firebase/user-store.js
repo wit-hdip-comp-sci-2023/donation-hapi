@@ -1,8 +1,8 @@
 import { ref, set, child, remove } from "firebase/database";
 import { find, findOne, add, findBy, edit } from "./firebase-utils.js";
-import { firebaseDatabase } from "./connect.js";
+import { getDb } from "./connect.js";
 export const userStore = {
-    doc: ref(firebaseDatabase, "users"),
+    doc: ref(getDb(), "users"),
     async find() {
         const users = (await find(this.doc));
         return users;

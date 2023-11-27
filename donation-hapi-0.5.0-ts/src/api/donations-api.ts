@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { Request, ResponseObject, ResponseToolkit } from "@hapi/hapi";
 import { db } from "../models/db.js";
+import { Candidate, Donation } from "../types/donation-stores.js";
 
 export const donationsApi = {
   findAll: {
@@ -21,9 +22,9 @@ export const donationsApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function (request, h) {
-      const donations = await db.donationStore.findBy(request.params.id);
-      return donations;
+    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
+      const donations = (await db.donationStore.findBy(request.params.id)) as Donation;
+      return h.response(donations).code(200);
     },
   },
 
@@ -31,21 +32,23 @@ export const donationsApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function (request, h) {
-      const candidate = await db.candidateStore.findOne(request.params.id);
-      if (!candidate) {
+    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
+      const candidate = (await db.candidateStore.findOne(request.params.id)) as Candidate;
+      if (candidate === null) {
         return Boom.notFound("No Candidate with this id");
       }
+      const donationPayload = request.payload as Donation;
       const donation = {
-        amount: request.payload.amount,
-        method: request.payload.method,
+        amount: donationPayload.amount,
+        method: donationPayload.method,
         donor: request.auth.credentials.email,
         candidate: candidate._id,
-        lat: request.payload.lat,
-        lng: request.payload.lng,
+        lat: donationPayload.lat,
+        lng: donationPayload.lng,
       };
-      const newDonation = await db.donationStore.add(donation);
-      return newDonation;
+
+      const newDonation = (await db.donationStore.add(donation)) as Donation;
+      return h.response(newDonation).code(200);
     },
   },
 
@@ -53,10 +56,10 @@ export const donationsApi = {
     auth: {
       strategy: "jwt",
     },
-    handler: async function (request, h) {
+    handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
       console.log("delete...");
-      await db.donationStore.deleteAll();
-      return { success: true };
+      await db.donationStore.delete();
+      return h.response().code(204);
     },
   },
 };

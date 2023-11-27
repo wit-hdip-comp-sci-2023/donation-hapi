@@ -1,11 +1,11 @@
 import { ref, set, remove, child } from "firebase/database";
 import { find, add, findBy, findOne, edit } from "./firebase-utils.js";
-import { firebaseDatabase } from "./connect.js";
+import { getDb } from "./connect.js";
 import { candidateStore } from "./candidate-store.js";
 import type { Candidate, Donation, Store } from "../../types/donation-stores";
 
 export const donationStore: Store = {
-  doc: ref(firebaseDatabase, "donations"),
+  doc: ref(getDb(), "donations"),
 
   async find(): Promise<Donation[]> {
     const donations = (await find(this.doc)) as Donation[];

@@ -1,6 +1,6 @@
 import { Request, ResponseObject, ResponseToolkit } from "@hapi/hapi";
 import { db } from "../models/db.js";
-import { User } from "../types/donation-stores";
+import { User } from "../types/donation-stores.js";
 
 export const accountsController = {
   index: {
@@ -38,7 +38,7 @@ export const accountsController = {
     handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject> {
       const { email, password } = request.payload as User;
       const user = (await db.userStore.findBy(email)) as User;
-      if (!user || user.password !== password) {
+      if (user === null || user.password !== password) {
         return h.redirect("/");
       }
       request.cookieAuth.set({ id: user._id });
@@ -55,7 +55,7 @@ export const accountsController = {
 
   async validate(request: Request, session: { id: string }): Promise<{ isValid: true; credentials: User } | { isValid: false }> {
     const user = (await db.userStore.findOne(session.id)) as User;
-    if (!user) {
+    if (user === null) {
       return { isValid: false };
     }
     return { isValid: true, credentials: user };
