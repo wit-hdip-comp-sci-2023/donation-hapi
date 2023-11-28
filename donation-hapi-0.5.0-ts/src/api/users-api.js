@@ -65,7 +65,7 @@ export const userApi = {
         handler: async function (request, h) {
             const payload = request.payload;
             try {
-                const user = (await db.userStore.findOne(payload.email));
+                const user = (await db.userStore.findBy(payload.email));
                 if (user === null)
                     return Boom.unauthorized("User not found");
                 const passwordsMatch = payload.password === user.password;

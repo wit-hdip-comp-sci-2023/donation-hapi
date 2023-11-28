@@ -68,7 +68,7 @@ export const userApi = {
     handler: async function (request: Request, h: ResponseToolkit): Promise<ResponseObject | Boom.Boom<string>> {
       const payload = request.payload as User;
       try {
-        const user = (await db.userStore.findOne(payload.email)) as User;
+        const user = (await db.userStore.findBy(payload.email)) as User;
         if (user === null) return Boom.unauthorized("User not found");
         const passwordsMatch: boolean = payload.password === user.password;
         if (!passwordsMatch) return Boom.unauthorized("Invalid password");
